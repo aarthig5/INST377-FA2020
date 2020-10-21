@@ -14,7 +14,7 @@ html, body {
     width: 70%;
     min-width: 800px;
     margin: 0 auto;
-    background-color: #6091C3;
+    background-color: rgb(255, 179, 179);
   }
   
   /* || typography */
@@ -65,7 +65,7 @@ html, body {
   }
   
   .main, .header, nav, .article, .aside, footer, section {
-    background-color: rgba(0,255,0,0.5);
+    background-color: rgb(255, 228, 225);
     padding: 1%;
   }
   
@@ -112,10 +112,6 @@ html, body {
   
   /* || main layout */
   
-  .main {
-    display: flex;
-  }
-  
   .article, section {
     flex: 4;
   }
@@ -140,47 +136,59 @@ html, body {
     margin-top: 10px;
     background: rgba(0,255,0,0.5);
   }
-
+  
   .flex-outer li,
   .flex-inner {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    margin-right: 10px;
   }
-
+  
   .flex-outer > li > label,
   .flex-outer li p {
-    flex: 1 0 120px;
-    max-width: 220px;
+    flex: 1 0 125px;
+    max-width: 225px;
+    margin-right: 10px;
+    padding: 8px;
   }
   
   .flex-outer > li > label + *,
   .flex-inner {
-    flex: 1 0 220px;
+    flex: 1 0 225px;
+    margin-right: 10px;
   }
-
+  
   .flex-outer li button {
-    margin-left: auto;
-    padding: 8px 16px;
+    margin-left: 0px;
+    padding: 6px 12px;
     border: none;
     background: #333;
     color: #f2f2f2;
     text-transform: uppercase;
     letter-spacing: .09em;
-    border-radius: 2px;
+    border-radius: 3px;
+    margin-right: 10px;
   }
-
+  
+  .flex-outer {
+    max-width: 800px;
+    padding: 0px 16px;
+  }
+  
   .flex-inner li {
-    width: 100px;
+    width: 95px;
+    margin-right: 10px;
   }
-
+  
   .flex-inner {
     justify-content: space-between;
+    margin-right: 10px;
   }
-
-
+  
+  
   .wrapper {
     justify-content: center;
+    margin-right: 10px;
   }
-
-
+  
