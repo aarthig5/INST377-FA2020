@@ -17,8 +17,14 @@ function sortFunction(a, b, key) {
   return 0;
 }
 
-function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
+// function getRandomInt(min,max) {
+//   return Math.floor(Math.random() * Math.floor(max));
+// }
+
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive 
 }
 
 document.body.addEventListener('submit', async (e) => {
@@ -35,30 +41,28 @@ document.body.addEventListener('submit', async (e) => {
     .then((fromServer) => {
       // You're going to do your lab work in here. Replace this comment.
       // console.log('fromServer', fromServer);
-      const countries = range(10).map((i) => fromServer[getRandomInt(fromServer.length)]);
-      countries.sort((b,a) => sortFunction(a,b, 'name'));
-      console.log(countries)
+      console.log(fromServer)
+      if (document.querySelector('.flex-inner')) {
+        document.querySelector('.flex-inner').remove();
+      }
 
-      const order = document.createElement('ol');
-      order.setAttribute('class', 'flex-inner');
-      countries.map((country) => {
-        const unorder = document.createElement('li');
-        const check = document.createElement('input');
-        check.setAttribute('type','checkbox');
-        check.setAttribute('id',country.code);
-        check.value = country.code;
-        check.name = 'aarthi';
-        const label = document.createElement('label');
-        label.setAttribute('for',country.code);
-        label.innerText = country.name;
-        unorder.appendChild(check);
-        unorder.appendChild(label);
-        order.appendChild(unorder);
+      const randomTen = range(10);
+      const tenMap = randomTen.map(() => {
+        const number = getRandomIntInclusive(0,243);
+        return fromServer[number];
       });
 
-      const container = document.getElementById('checklistCont');
-      container.innerHTML ='';
-      container.appendChild(order)
+      const reverseList = tenMap.sort((a, b) => sortFunction(b, a, 'name'));
+      const orderedList = document.createElement('ol');
+      orderedList.className = 'flex-inner';
+      $('form').prepend(orderedList);
+
+      reverseList.forEach((element, i) => {
+        const unorderedList = document.createElement('li');
+        $(unorderedList).append(`<input type="checkbox" value=${element.code} id=${element.code} />`);
+        $(unorderedList).append(`<label for=${element.code}>${element.name}</label>`);
+        $(orderedList).append(unorderedList);
+      });
     })
 
     .catch((err) => console.log(err));
