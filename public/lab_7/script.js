@@ -1,19 +1,65 @@
 function convertRestaurantsToCategories(restaurantList) {
   // process your restaurants here!
-  const filteredData = data.filter((f) => f.geocoded_column_1);
-  const list = filteredData.map((m) => ({
-	  category: m.category,
-	  name: m.name, 
-	  latLong: m.geocoded_column_1.coordinates
+  const catList = [];
+  const catObj = {};
+  var i;
+  for (let i=0; i<restaurantList.length; i++) {
+    catList.push(restaurantList[i].category);
+    if (!catObj[catList[i]]) {
+      catObj[catList[i]] = 0;
+    }
+    catObj[catList[i]] += 1;
+    // console.log(restaurantList[i].category);
+  }
+  //   console.log(catObj);
+  const list = Object.keys(catObj).map((m) => ({
+    y: catObj[m],
+    label: m
   }));
+
   return list;
 }
 
 function makeYourOptionsObject(datapointsFromRestaurantsList) {
   // set your chart configuration here!
+  CanvasJS.addColorSet('customColorSet1', [
+	// add an array of colors here https://canvasjs.com/docs/charts/chart-options/colorset/
+	'#1b2d40',
+	'#577596',
+	'#c7262b',
+	'#f85c37',
+	'#ff8250',
+  ]);
 
-  return canvasJSConfigObject;
-} 
+  return {
+    animationEnabled: true,
+    colorSet: 'customColorSet1',
+    title: {
+      text: 'Places To Eat Out In Future'
+    },
+    axisX: {
+      interval: 1,
+      labelFontSize: 12
+    },
+    axisY2: {
+      interlacedColor: 'rgba(1,77,101,.2)',
+      gridColor: 'rgba(1,77,101,.1)',
+      title: 'Restaurants By Category',
+      labelFontSize: 12,
+      scaleBreaks: {customBreaks: [
+        {startValue: 40, endValue: 50, color: '#1b2d40'}, 
+        {startValue: 85, endValue: 100, color: '#1b2d40'}, 
+        {startValue: 140, endValue: 175, color: '#1b2d40'} 
+      ]} // Add your scale breaks here https://canvasjs.com/docs/charts/chart-options/axisy/scale-breaks/custom-breaks/
+    },
+    data: [{
+      type: 'bar',
+      name: 'restaurants',
+      axisYType: 'secondary',
+      dataPoints: datapointsFromRestaurantsList
+    }]
+  };
+}
 
 function runThisWithResultsFromServer(jsonFromServer) {
   console.log('jsonFromServer', jsonFromServer);
@@ -21,57 +67,14 @@ function runThisWithResultsFromServer(jsonFromServer) {
   // Process your restaurants list
   // Make a configuration object for your chart
   // Instantiate your chart
-  const chart = new CanvasJS.Chart("chartContainer", {
-	animationEnabled: true,
-	
-	title:{
-	text:"Places to Eat Out in Future"
-	},
-	axisX:{
-	interval: 1,
-
-	scaleBreaks: [
-	  { startValue: 40, endValue: 50 },
-	  { startValue: 85, endValue: 100 },
-	  { startValue: 140, endValue: 175 }
-	]
-	},
-	axisY2:{
-		interlacedColor: "rgba(1,77,101,.2)",
-		gridColor: "rgba(1,77,101,.1)",
-		title: "Restaurants by Category"
-	},
-	data: [{
-		type: "bar",
-		name: "restaurants",
-		axisYType: "secondary",
-		color: "#014D65",
-		dataPoints: [
-			{ y: 3, label: "Sweden" },
-			{ y: 7, label: "Taiwan" },
-			{ y: 5, label: "Russia" },
-			{ y: 9, label: "Spain" },
-			{ y: 7, label: "Brazil" },
-			{ y: 7, label: "India" },
-			{ y: 9, label: "Italy" },
-			{ y: 8, label: "Australia" },
-			{ y: 11, label: "Canada" },
-			{ y: 15, label: "South Korea" },
-			{ y: 12, label: "Netherlands" },
-			{ y: 15, label: "Switzerland" },
-			{ y: 25, label: "Britain" },
-			{ y: 28, label: "Germany" },
-			{ y: 29, label: "France" },
-			{ y: 52, label: "Japan" },
-			{ y: 103, label: "China" },
-			{ y: 134, label: "US" }
-		]
-	}]
-});
-chart.render();
-
+  const reorganizedData = convertRestaurantsToCategories(jsonFromServer);
+  const options = makeYourOptionsObject(reorganizedData);
+  // console.log(reorganizedData);
+  const chart = new CanvasJS.Chart('chartContainer', options);
+  chart.render();
 }
 
+// Leave lines 52-67 alone; do your work in the functions above
 document.body.addEventListener('submit', async (e) => {
   e.preventDefault(); // this stops whatever the browser wanted to do itself.
   const form = $(e.target).serializeArray();
