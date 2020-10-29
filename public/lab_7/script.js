@@ -1,24 +1,40 @@
 function convertRestaurantsToCategories(restaurantList) {
   // process your restaurants here!
+  const filteredData = data.filter((f) => f.geocoded_column_1);
+  const list = filteredData.map((m) => ({
+	  category: m.category,
+	  name: m.name, 
+	  latLong: m.geocoded_column_1.coordinates
+  }));
+  return list;
+}
+
+function makeYourOptionsObject(datapointsFromRestaurantsList) {
+  // set your chart configuration here!
+
+  return canvasJSConfigObject;
+} 
+
+function runThisWithResultsFromServer(jsonFromServer) {
+  console.log('jsonFromServer', jsonFromServer);
+  sessionStorage.setItem('restaurantList', JSON.stringify(jsonFromServer)); // don't mess with this, we need it to provide unit testing support
+  // Process your restaurants list
+  // Make a configuration object for your chart
+  // Instantiate your chart
   const chart = new CanvasJS.Chart("chartContainer", {
 	animationEnabled: true,
 	
 	title:{
-    text:"Places to Eat Out in Future"
+	text:"Places to Eat Out in Future"
 	},
 	axisX:{
-    interval: 1,
-    // scaleBreaks: {
-		// 	customBreaks: [{
-		// 		startValue: 40,
-		// 		endValue: 50
-		// 	}]
-    // }
-    scaleBreaks: [
-      { startValue: 40, endValue: 50 },
-      { startValue: 85, endValue: 100 },
-      { startValue: 140, endValue: 175 }
-    ]
+	interval: 1,
+
+	scaleBreaks: [
+	  { startValue: 40, endValue: 50 },
+	  { startValue: 85, endValue: 100 },
+	  { startValue: 140, endValue: 175 }
+	]
 	},
 	axisY2:{
 		interlacedColor: "rgba(1,77,101,.2)",
@@ -53,21 +69,7 @@ function convertRestaurantsToCategories(restaurantList) {
 	}]
 });
 chart.render();
-  
-  return list;
-}
 
-function makeYourOptionsObject(datapointsFromRestaurantsList) {
-  // set your chart configuration here!
-  return canvasJSConfigObject;
-} 
-
-function runThisWithResultsFromServer(jsonFromServer) {
-  console.log('jsonFromServer', jsonFromServer);
-  sessionStorage.setItem('restaurantList', JSON.stringify(jsonFromServer)); // don't mess with this, we need it to provide unit testing support
-  // Process your restaurants list
-  // Make a configuration object for your chart
-  // Instantiate your chart
 }
 
 document.body.addEventListener('submit', async (e) => {
@@ -81,7 +83,8 @@ document.body.addEventListener('submit', async (e) => {
     body: JSON.stringify(form)
   })
     .then((fromServer) => fromServer.json())
-    .then((jsonFromServer) => runThisWithResultsFromServer(jsonFromServer))
+	.then((jsonFromServer) => runThisWithResultsFromServer(jsonFromServer)) 
+
     .catch((err) => {
       console.log(err);
     });
