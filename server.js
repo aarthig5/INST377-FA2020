@@ -6,6 +6,8 @@ import dotenv from 'dotenv';
 // lab 6 
 // import countries from './public/lab_6/countries.js';
 import fetch from 'node-fetch';
+import sqllite3 from sqlite3;
+import sqlite from sqlite; 
 
 dotenv.config();
 
